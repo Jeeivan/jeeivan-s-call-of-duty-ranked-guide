@@ -1,9 +1,21 @@
-weapon = {
-    "vaznev" : "Bruen Pendulum, Commando Foregrip, Otrezat Stock, True-Tac Grip",
-    "tac56" : "17.5 Tundra Pro Barrel, FSS Sharkfin 90, 5.56 High Velocity, Demo Cleanshot Grip, TV Xline Pro",
-    "spx" : ".300 High Velocity, Schlager Match Grip, FSS ST87 Bolt, PVZ-890 TAC Stock",
-    "vel" : "Agent grip, 30 round mag, Schlager soldier grip, assault-60 stock",
-    "kastov 762" : "TZL-90 V3, IG-K30 406mm, True TAC Grip, FTAC Ripper 56"
+import json
+
+weapon = {}
+
+weapons = ("vaznev", "tac56", "vel", "kastov")
+
+smgAttachments = {
+    "muzzle" : "Bruen Pendulum, Lockshot KT85",
+    "underbarrel" : "Commando Foregrip, FFS Sharkfin 90",
+    "stock" : "Otrezat Stock, Markeev R7 Stock",
+    "rear grip" : "True-Tac Grip, Phantom Grip"
+    }
+
+arAttachments = {
+    "barrel" : "17.5 Tundra Pro Barrel, TZL-90 V",
+    "underbarrel" : "Commando Foregrip, FFS Sharkfin 90",
+    "stock" : "TV Xline Pro, FTAC Ripper 56",
+    "rear grip" : "True-Tac Grip, Demo Cleanshot Grip"
     }
 
 perks = {
@@ -12,10 +24,17 @@ perks = {
     }
 
 def getClass():
-    gun = input("What is your gun? ")
-    # type = input("what gun type is that? ")
-
-    return gun + " class setup: " + weapon[gun]
+    print("Weapons to choose from:")
+    for x in weapons:
+        print(x)
+    gun = input("What is your gun? Or if you would like all loadouts please enter 'all' ")
+    if gun == "vaznev" or gun == "tac56" or gun == "vel" or gun == "kastov":
+        return gun + " class setup: " + weapon[gun]
+    elif gun == "all":
+        for key,value in weapon.items():
+            print(key,':',value)
+    else:
+        return "You have not selected a weapon from the list or selected 'all'"
 
 def getPerks():
     type = input("Is the gun your using an 'ar' or an 'smg'? ")
@@ -60,21 +79,46 @@ def getModes():
         return "Like Search, Control is a round-based mode where the first one to win three separate rounds wins the whole match. Teams take turns on defense and offense. Regardless of the side, both teams begin the round with 30 shared lives. If either team runs out of lives, the match ends. But the goal is to capture two points on the map. There are three checkpoints on the circle. Completing the circle will capture the point for the offensive side. If the offense can’t capture both points in time, or they run out of lives, then the defense takes the victory. This mode is all about fast kills and learning how to spawn trap, so it will take time to learn the routes, but it’s certainly possible."
     else:
         return "Error! Please pick a mode from 'HP', 'S&D' and 'Control'"
-    # if type == "smg":
-    #     return gun + " class setup: " + weapon[gun] + "\nperks: " + perks["smg"] + "\nfield upgrade: " + field_upgrade["smg"]
-    # elif type == "ar":
-    #     return gun + " class setup: " + weapon[gun] + "\nperks: " + perks["ar"] + "\nfield upgrade: " + field_upgrade["ar"]
-    # else:
-    #     return "Please select either ar or smg"
+
+def makeLoadout():
+    print("Weapons to choose from:")
+    for x in weapons:
+        print(x)
+    chooseGun = input("Which gun would you like to make a loadout for? ")
+    if chooseGun == "vaznev":
+        print(smgAttachments)
+    elif chooseGun == "tac56":
+        print(arAttachments)
+    elif chooseGun == "vel":
+        print(smgAttachments)
+    elif chooseGun == "kastov":
+        print(arAttachments)
+    else:
+        return "This is not an option! Please select from a weapon above."
+    chooseMuzzle = input("Which muzzle/barrel would you like? ")
+    chooseUnderBarrel = input("Which underbarrel would you like? ")
+    chooseStock = input("Which stock would you like? ")
+    chooseRearGrip = input("Which rear grip would you like? ")
+    userAttachments = chooseMuzzle + ", " + chooseUnderBarrel + ", " + chooseStock + ", " + chooseRearGrip
+    weapon[chooseGun + " personal loadout"] = userAttachments
+    with open("weapons.txt", "w") as outfile:
+        json.dump(weapon, outfile)
+    for key,value in weapon.items():
+        print(key,':',value)
+
 
 def menu():
+    global weapon
+    with open("weapons.txt", "r") as infile:
+        weapon = json.load(infile)
     print("Welcome to Jeeivan's ranked play guide")
     print("Abbreviations used: ar-Assault rifle, smg-Submachine gun")
-    print("1. Give loadout for gun \nLoadouts available for: vaznev, tac56, spx, vel, kastov 762")
+    print("1. Give loadout for gun")
     print("2. Give perks for class")
     print("3. Give description of how to play role")
     print("4. How to use field upgrades effectively")
     print("5. Ranked play modes")
+    print("6. Make your own loadout")
     usersInput = input('Enter your option here: ')
     if usersInput == "1":
         print(getClass())
@@ -86,8 +130,27 @@ def menu():
         print(getFieldupgrade())
     elif usersInput == "5":
         print(getModes())
+    elif usersInput == "6":
+        print(makeLoadout())
     else:
         print("That is not an option! Please select a number from the menu above :)")
     menu()
 
 menu()
+
+# Allow user to create own classes (look up adding to dictionary)
+# for loop for weapons
+# a way to show all weapon loadouts
+# create your own perk
+# handling complex user inputs 
+# have user creat own weapon loadout
+# create list of attachements for each gun
+# take user input one by one for each attachment
+# combine attachments and add new entry to dictionary (add all attachments to one string)
+# make sure that the key is a different value - string manipulation
+
+
+# look up reading and writing to file
+# look up setting dictionary from text file
+# reading is getting the data from the file
+# writing is saving the data to the file
