@@ -44,7 +44,7 @@ def getPerks():
     elif type == "ar":
         return "perks: " + perks["ar"]
     else:
-        return "Please select either ar or smg"
+        return "Please select either 'ar' or 'smg'"
     
 def getRole():
     role = input("Do you play 'ar', 'smg' or as a 'flex'? ")
